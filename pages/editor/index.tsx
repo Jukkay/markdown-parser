@@ -27,11 +27,20 @@ const Editor: NextPage = () => {
         return <h1 className="title is-1">{line.replace('#', '')}</h1>
       
       // Paragraps
+
       // List
+      if (/^[-+]/.test(line))
+        return <li>{line.replace(/^[-+]/, '')}</li>
 
       // Numbered list
+
+      if (/^\d{1,2}./.test(line))
+        return (<li>{line.replace(/^\d{1,2}./, '')}</li>)
+
       // Image
       // Quote
+      if (/^>/.test(line))
+        return (<blockquote>{line.replace(/^>/, '')}</blockquote>)
       // Colors
       // Comment out
 
@@ -43,7 +52,7 @@ const Editor: NextPage = () => {
       }
       
       else
-        return <span>{line}</span>
+        return (<div>{line}<br/></div>)
       
     })
     
@@ -63,10 +72,10 @@ const Editor: NextPage = () => {
             <Link href="/viewer">
               <button className='button is-large is-primary mx-3'>Viewer</button>
             </Link>
-            <textarea className="textarea mt-5" name='textarea' placeholder="Your text goes here" rows={50} onChange={handleChange}></textarea>
+            <textarea className="textarea mt-5" name='textarea' placeholder="Your text goes here" rows={20} onChange={handleChange}></textarea>
             <button className='button is-large is-primary my-3 is-pulled-right' onClick={() => parseText()}>Parse text</button>
 
-            <div>{output?.map((line) => <>{line}</> )}</div>
+            <div className="content">{output?.map((line) => <>{line}</> )}</div>
     
         </div>
       </div>
