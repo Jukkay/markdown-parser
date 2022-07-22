@@ -11,7 +11,7 @@ function MyApp({ Component, pageProps }: AppProps) {
   const [bgColor, setBgColor] = useState('')
   const [output, setOutput] = useState<ReactNode[]>()
   return (
-    <div className="container is-max-widescreen">
+    <div className="container is-fluid">
       <section className='section'>
         <div className='columns'>
           <div className='column is-11 is-offset-1'>

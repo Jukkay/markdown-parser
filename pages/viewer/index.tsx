@@ -36,18 +36,18 @@ const Viewer: NextPage = () => {
 
   useEffect(() => {
     if (typeof window !== "undefined") {
-      const width = window.innerHeight * 0.75;
-      const height = width * 1.4142;
+      const width = window.innerWidth * 0.7
+      const height = width * 1.4142
       setHeight(height);
       setWidth(width);
     }
   });
 
   useEffect(() => {
-    const string = `${bgColor} ${textColor} ${textSize}`;
+    const string = `is-flex-grow-0 p-6 ${bgColor} ${textColor} ${textSize}`;
     setClassNames(string);
   }, [bgColor, textColor, textSize]);
-  console.log('output', output);
+
   return output ? (
     <div className="has-text-left">
       <h1 className="title is-4 my-6">Viewer</h1>
