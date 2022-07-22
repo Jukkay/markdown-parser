@@ -6,7 +6,7 @@ import { EditorContext } from "../_app";
 import { FiDownload } from 'react-icons/fi'
 
 const Viewer: NextPage = () => {
-  const { bgColor, setBgColor, output, setOutput, text } =
+  const { bgColor, setBgColor, output, setOutput, text, setText } =
     useContext(EditorContext);
   const [width, setWidth] = useState(0);
   const [height, setHeight] = useState(0);
@@ -14,8 +14,24 @@ const Viewer: NextPage = () => {
   const [textSize, setTextSize] = useState("is-size-6");
   const [classNames, setClassNames] = useState("");
 
+  // Look for saved text in local storage
   useEffect(() => {
-    if (text) setOutput(parseText(text));
+    const savedText = localStorage.getItem("savedText");
+    if (savedText) {
+      setText(savedText);
+      const savedOutput = parseText(savedText)
+      setOutput(savedOutput);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (text) {
+      setOutput(parseText(text));
+      localStorage.setItem(
+        "savedText",
+        text
+      );
+    }
   }, [text]);
 
   useEffect(() => {
@@ -31,7 +47,7 @@ const Viewer: NextPage = () => {
     const string = `${bgColor} ${textColor} ${textSize}`;
     setClassNames(string);
   }, [bgColor, textColor, textSize]);
-
+  console.log('output', output);
   return output ? (
     <div className="has-text-left">
       <h1 className="title is-4 my-6">Viewer</h1>

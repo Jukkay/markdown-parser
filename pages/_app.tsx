@@ -6,6 +6,7 @@ import { createContext, ReactNode, useState } from 'react'
 export const EditorContext = createContext<any>({})
 
 function MyApp({ Component, pageProps }: AppProps) {
+
   const [text, setText] = useState('')
   const [bgColor, setBgColor] = useState('')
   const [output, setOutput] = useState<ReactNode[]>()
