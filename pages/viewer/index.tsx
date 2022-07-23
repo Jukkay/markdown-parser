@@ -1,13 +1,17 @@
 import type { NextPage } from "next";
-import Link from "next/link";
 import { ReactNode, useContext, useEffect, useState } from "react";
 import { parseText } from "../editor";
 import { EditorContext } from "../_app";
 import { FiDownload } from 'react-icons/fi'
+import { exportToPDF } from "./pdf_export";
 
 const Viewer: NextPage = () => {
-  const { bgColor, setBgColor, output, setOutput, text, setText } =
+
+  // Context import
+  const { bgColor, setBgColor, output, setOutput, text, setText, headingColor, setHeadingColor } =
     useContext(EditorContext);
+
+  // Local state declarations
   const [width, setWidth] = useState(0);
   const [height, setHeight] = useState(0);
   const [textColor, setTextColor] = useState("has-text-black");
@@ -19,14 +23,15 @@ const Viewer: NextPage = () => {
     const savedText = localStorage.getItem("savedText");
     if (savedText) {
       setText(savedText);
-      const savedOutput = parseText(savedText)
+      const savedOutput = parseText(savedText, headingColor)
       setOutput(savedOutput);
     }
   }, []);
 
+  // Parses and saves input text on change
   useEffect(() => {
     if (text) {
-      setOutput(parseText(text));
+      setOutput(parseText(text, setHeadingColor));
       localStorage.setItem(
         "savedText",
         text
@@ -34,6 +39,7 @@ const Viewer: NextPage = () => {
     }
   }, [text]);
 
+  // Calculates width and height in A4 ratio for output div
   useEffect(() => {
     if (typeof window !== "undefined") {
       const width = window.innerWidth * 0.7
@@ -43,15 +49,30 @@ const Viewer: NextPage = () => {
     }
   });
 
+  // Sets new classnames string when settings change
   useEffect(() => {
     const string = `is-flex-grow-0 p-6 ${bgColor} ${textColor} ${textSize}`;
     setClassNames(string);
   }, [bgColor, textColor, textSize]);
 
+  // Updates heading color css variable
+  useEffect(() => {
+    document.documentElement.style.setProperty('--heading-color', headingColor)
+  }, [headingColor]);
+
+  // Click handler for export button
+  const handleExportClick = () => {
+    const output = document.getElementById('output')
+    if (output)
+      exportToPDF(output, width, height)
+  }
+
   return output ? (
     <div className="has-text-left">
       <h1 className="title is-4 my-6">Viewer</h1>
       <div className="is-flex is-flex-wrap-wrap is-align-items-end">
+
+        {/* Background color selector */}
         <div className="mb-3 mr-6">
           <p className="mb-3 has-text-weight-semibold">Background color:</p>
           <div className="buttons has-addons">
@@ -77,6 +98,8 @@ const Viewer: NextPage = () => {
             ></div>
           </div>
         </div>
+
+        {/* Text color selector */}
         <div className="mb-3 mr-6">
           <p className="mb-3 has-text-weight-semibold">Text color:</p>
           <div className="buttons has-addons">
@@ -102,6 +125,35 @@ const Viewer: NextPage = () => {
             ></div>
           </div>
         </div>
+
+        {/* Heading color selector */}
+        <div className="mb-3 mr-6">
+          <p className="mb-3 has-text-weight-semibold">Heading color:</p>
+          <div className="buttons has-addons">
+            <div
+              className="button has-background-white is-clickable"
+              onClick={() => setHeadingColor("white")}
+            ></div>
+            <div
+              className="button has-background-dark is-clickable"
+              onClick={() => setHeadingColor("hsl(0, 0%, 21%)")}
+            ></div>
+            <div
+              className="button has-background-light is-clickable"
+              onClick={() => setHeadingColor("hsl(0, 0%, 96%)")}
+            ></div>
+            <div
+              className="button has-background-primary is-clickable"
+              onClick={() => setHeadingColor("hsl(171, 100%, 41%)")}
+            ></div>
+            <div
+              className="button has-background-info is-clickable"
+              onClick={() => setHeadingColor("hsl(204, 86%, 53%)")}
+            ></div>
+          </div>
+        </div>
+
+        {/* Text size selector */}
         <div className="mb-3 mr-6">
           <p className="mb-3 has-text-weight-semibold">Text size:</p>
           <div className="buttons has-addons">
@@ -131,22 +183,27 @@ const Viewer: NextPage = () => {
             </div>
           </div>
         </div>
+
+        {/* Download button */}
         <div className="">
-          <button className="button is-medium is-primary my-3 is-pulled-right">
+          <button className="button is-medium is-primary my-3 is-pulled-right" onClick={() => handleExportClick()}>
             <span className="icon is-small mr-1">
-            <FiDownload />
+              <FiDownload />
             </span>
             Download as PDF
           </button>
         </div>
       </div>
-      <div className={classNames} style={{ width: width, height: height }}>
+
+      {/* Output section */}
+      <div className={classNames} id='output' style={{ width: width, height: height }}>
         {output?.map((line: ReactNode, index: number) => (
           <div key={index.toString()}>{line}</div>
         ))}
       </div>
     </div>
   ) : (
+    // Output when there's nothing to output
     <div className="title is-4 mt-6 pt-6">Add markup to editor first.</div>
   );
 };

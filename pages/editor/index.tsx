@@ -1,75 +1,70 @@
 import type { NextPage } from "next";
 import Link from "next/link";
 import {
-  useState,
-  ReactNode,
   useEffect,
   useContext,
-  HTMLAttributes,
-  CSSProperties,
-  Key,
 } from "react";
 import { EditorContext } from "../_app";
 
-export const parseText = (text: string) => {
+// Parses markdown row by row
+export const parseText = (text: string, headingColor: string ) => {
   const array = text.split("\n");
   const parsedArray = array.map((line: string, linenumber: number) => {
     const index = linenumber.toString();
+
     // Headings
     if (/^######/.test(line))
       return (
-        <h6 key={index} className="title is-6">
+        <h6 key={index} className="title is-6 heading-color">
           {line.replace("######", "")}
         </h6>
       );
     if (/^#####/.test(line))
       return (
-        <h5 key={index} className="title is-5">
+        <h5 key={index} className="title is-5 heading-color">
           {line.replace("#####", "")}
         </h5>
       );
     if (/^####/.test(line))
       return (
-        <h4 key={index} className="title is-4">
+        <h4 key={index} className="title is-4 heading-color">
           {line.replace("####", "")}
         </h4>
       );
     if (/^###/.test(line))
       return (
-        <h3 key={index} className="title is-3">
+        <h3 key={index} className="title is-3 heading-color">
           {line.replace("###", "")}
         </h3>
       );
     if (/^##/.test(line))
       return (
-        <h2 key={index} className="title is-2">
+        <h2 key={index} className="title is-2 heading-color">
           {line.replace("##", "")}
         </h2>
       );
     if (/^#/.test(line))
       return (
-        <h1 key={index} className="title is-1">
+        <h1 key={index} className="title is-1 heading-color">
           {line.replace("#", "")}
         </h1>
       );
 
-    // List
+    // Unordered lists
     if (/^[-+]/.test(line))
       return <li key={index}>{line.replace(/^[-+]/, "")}</li>;
 
-    // Numbered list
-
+    // Numbered lists
     if (/^\d{1,2}./.test(line))
       return <li key={index}>{line.replace(/^\d{1,2}./, "")}</li>;
 
-    // Image
-
+    // Images
     if (/^(?:!\[)(.*)(?:\]\()(.*)(?:\))/.test(line)) {
       const arr = line.match(/^(?:!\[)(.*)(?:\]\()(.*)(?:\))/);
       if (arr) return <img key={index} src={arr[2]} alt={arr[1]} />;
     }
 
-    // Quote
+    // Quotes
     if (/^>/.test(line))
       return <blockquote key={index}>{line.replace(/^>/, "")}</blockquote>;
 
@@ -85,7 +80,7 @@ export const parseText = (text: string) => {
       }
     }
 
-    // URL
+    // URLs
     if (/^(?:\[)(.*)(?:\]\()(.*)(?:\))/.test(line)) {
       const arr = line.match(/^(?:\[)(.*)(?:\]\()(.*)(?:\))/);
       if (arr)
@@ -97,22 +92,19 @@ export const parseText = (text: string) => {
     }
 
     // Bold text
-
     if (/(\*\*|__)(.*)(\*\*|__)/.test(line)) {
-      // parse line separately
       return <strong key={index}>{line.replace(/(\*\*|__)/g, "")}</strong>;
     }
 
     // Italic text
     if (/(\*|_)(.*)(\*|_)/.test(line)) {
-      // parse line separately
       return (
         <span key={index} className="is-italic">
           {line.replace(/(\*|_)/g, "")}
         </span>
       );
     }
-
+    // Return for unrecognized patterns
     return (
       <div key={index}>
         {line}
@@ -124,9 +116,11 @@ export const parseText = (text: string) => {
 };
 
 const Editor: NextPage = () => {
-
-  const { setBgColor, text, setText, output, setOutput } =
+  // Context import
+  const { setBgColor, text, setText, output, setOutput, headingColor, setHeadingColor } =
     useContext(EditorContext);
+
+  // Text area input control
   const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) =>
     setText(e.target.value);
 
@@ -135,7 +129,7 @@ const Editor: NextPage = () => {
     const savedText = localStorage.getItem("savedText");
     if (savedText) {
       setText(savedText);
-      const savedOutput = parseText(savedText)
+      const savedOutput = parseText(savedText, headingColor)
       setOutput(savedOutput);
     }
   }, []);
@@ -143,6 +137,8 @@ const Editor: NextPage = () => {
   return (
     <div>
       <h1 className="title is-4 is-pulled-left">Edit</h1>
+      
+      {/* Text area input */}
       <textarea
         className="textarea mt-5"
         name="textarea"
@@ -152,6 +148,8 @@ const Editor: NextPage = () => {
         onChange={handleChange}
       >
       </textarea>
+      
+      {/* Button link to viewer page */}
       <Link href="/viewer">
         <button className="button is-large is-primary my-3 is-pulled-right">
           Go to viewer
