@@ -8,7 +8,7 @@ export const EditorContext = createContext<any>({})
 
 function MyApp({ Component, pageProps }: AppProps) {
 
-  // State declarations
+  // Global state declarations
   const [text, setText] = useState('')
   const [bgColor, setBgColor] = useState('')
   const [output, setOutput] = useState<ReactNode>()

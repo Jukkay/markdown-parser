@@ -33,7 +33,6 @@ Viewer page allows user to change background color, font color, title color, and
 The app is deployed through Vercel. You can find it at:
 http://markdown-parser.vercel.app/
 
-
 ### Usage
 
 1. Click the 'editor' button
