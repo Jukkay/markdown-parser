@@ -27,3 +27,17 @@ Viewer page allows user to change background color, font color, title color, and
 - Next.js
 - Bulma CSS
 - Sass
+
+### Deployment
+
+The app is deployed through Vercel. You can find it at:
+http://markdown-parser.vercel.app/
+
+
+### Usage
+
+1. Click the 'editor' button
+2. Write markup
+3. Click the 'Go to viewer' or 'Viewer' button to open the viewer. Text is saved and parsed automatically.
+4. If you want you can change the colors and the font size to fine tune the look.
+5. Click 'Download as PDF' button to download the file.

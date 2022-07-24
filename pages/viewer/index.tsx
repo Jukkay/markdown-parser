@@ -3,24 +3,23 @@ import { ReactNode, useContext, useEffect, useState } from "react";
 import { parseText } from "../editor";
 import { EditorContext } from "../_app";
 import { FiDownload } from 'react-icons/fi'
-
 import { jsPDF } from "jspdf";
 
 // PDF export
 const exportToPDF = (source: HTMLElement, width: number, height: number ) => {
     if (!source)
         return
-    
     const doc = new jsPDF({
-        orientation: 'p',
-        unit: 'px',
-        format: 'a4',
-        hotfixes: ['px_scaling']
-       })
+      orientation: 'p',
+      unit: 'px',
+      format: 'a4',
+      hotfixes: ['px_scaling']
+      })
     doc.html(source, {
         callback: (doc) => {
             doc.save()
         },
+        autoPaging: 'text',
     })
 }
 
@@ -34,7 +33,7 @@ const Viewer: NextPage = () => {
   const [width, setWidth] = useState(0);
   const [height, setHeight] = useState(0);
   const [textColor, setTextColor] = useState("has-text-black");
-  const [textSize, setTextSize] = useState("is-size-6");
+  const [textSize, setTextSize] = useState(14);
   const [classNames, setClassNames] = useState("");
 
   // Look for saved text in local storage
@@ -70,9 +69,9 @@ const Viewer: NextPage = () => {
 
   // Sets new classnames string when settings change
   useEffect(() => {
-    const string = `is-flex-grow-0 p-6 ${bgColor} ${textColor} ${textSize}`;
+    const string = `is-flex-grow-0 p-6 outputdiv ${bgColor} ${textColor}`;
     setClassNames(string);
-  }, [bgColor, textColor, textSize]);
+  }, [bgColor, textColor]);
 
   // Updates heading color css variable
   useEffect(() => {
@@ -88,7 +87,6 @@ const Viewer: NextPage = () => {
 
   return output ? (
     <div className="has-text-left">
-      {/* <Script src="html2pdf.bundle.min.js" strategy="afterInteractive" /> */}
       <h1 className="title is-4 my-6">Viewer</h1>
       <div className="is-flex is-flex-wrap-wrap is-align-items-end">
 
@@ -179,27 +177,33 @@ const Viewer: NextPage = () => {
           <div className="buttons has-addons">
             <div
               className="button has-background-light is-clickable"
-              onClick={() => setTextSize("is-size-7")}
+              onClick={() => setTextSize(11)}
             >
-              S
+              11
             </div>
             <div
               className="button has-background-light is-clickable"
-              onClick={() => setTextSize("is-size-6")}
+              onClick={() => setTextSize(12)}
             >
-              M
+              12
             </div>
             <div
               className="button has-background-light is-clickable"
-              onClick={() => setTextSize("is-size-4")}
+              onClick={() => setTextSize(13)}
             >
-              L
+              13
             </div>
             <div
               className="button has-background-light is-clickable"
-              onClick={() => setTextSize("is-size-3")}
+              onClick={() => setTextSize(14)}
             >
-              XL
+              14
+            </div>
+            <div
+              className="button has-background-light is-clickable"
+              onClick={() => setTextSize(16)}
+            >
+              16
             </div>
           </div>
         </div>
@@ -216,7 +220,7 @@ const Viewer: NextPage = () => {
       </div>
 
       {/* Output section */}
-      <div className={classNames} id='output' style={{ width: width, height: height, letterSpacing: 0.75 }}>
+      <div className={classNames} id='output' style={{ width: width, height: height, fontSize: textSize}}>
         {output?.map((line: ReactNode, index: number) => (
           <div key={index.toString()}>{line}</div>
         ))}

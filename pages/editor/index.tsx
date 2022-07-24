@@ -16,55 +16,55 @@ export const parseText = (text: string, headingColor: string) => {
     // Headings
     if (/^######/.test(line))
       return (
-        <h6 key={index} className="title is-6 heading-color">
+        <h6 key={index} className="title is-6 heading-color header-spacing">
           {line.replace("######", "")}
         </h6>
       );
     if (/^#####/.test(line))
       return (
-        <h5 key={index} className="title is-5 heading-color">
+        <h5 key={index} className="title is-5 heading-color header-spacing">
           {line.replace("#####", "")}
         </h5>
       );
     if (/^####/.test(line))
       return (
-        <h4 key={index} className="title is-4 heading-color">
+        <h4 key={index} className="title is-4 heading-color header-spacing">
           {line.replace("####", "")}
         </h4>
       );
     if (/^###/.test(line))
       return (
-        <h3 key={index} className="title is-3 heading-color">
+        <h3 key={index} className="title is-3 heading-color header-spacing">
           {line.replace("###", "")}
         </h3>
       );
     if (/^##/.test(line))
       return (
-        <h2 key={index} className="title is-2 heading-color">
+        <h2 key={index} className="title is-2 heading-color header-spacing">
           {line.replace("##", "")}
         </h2>
       );
     if (/^#/.test(line))
       return (
-        <h1 key={index} className="title is-1 heading-color">
+        <h1 key={index} className="title is-1 heading-color header-spacing">
           {line.replace("#", "")}
         </h1>
       );
 
     // Unordered lists
     if (/^[-+]/.test(line)) {
-      return (<li key={index} className='pl-4'>{line.replace(/^[-+]/, "")}</li>);
+      return (<li key={index} className='ml-4'>{line.replace(/^[-+]/, "")}</li>);
     }
 
     // Numbered lists
     if (/^\d{1,2}./.test(line)) {
-      return <li key={index} className='pl-4'>{line.replace(/^\d{1,2}./, "")}</li>;
+      return <li key={index} className='ml-4'>{line.replace(/^\d{1,2}./, "")}</li>;
     }
 
     // Images
     if (/^(?:!\[)(.*)(?:\]\()(.*)(?:\))/.test(line)) {
       const arr = line.match(/^(?:!\[)(.*)(?:\]\()(.*)(?:\))/);
-      if (arr) return <img key={index} src={arr[2]} alt={arr[1]} />;
+      if (arr) return <img key={index} className='ml-4' src={arr[2]} alt={arr[1]} />;
     }
 
     // Quotes
@@ -88,7 +88,7 @@ export const parseText = (text: string, headingColor: string) => {
       const arr = line.match(/^(?:\[)(.*)(?:\]\()(.*)(?:\))/);
       if (arr)
         return (
-          <a key={index} href={arr[2]} className='pl-4'>
+          <a key={index} href={arr[2]} className='ml-4'>
             {arr[1]}
           </a>
         );
@@ -172,7 +172,7 @@ export const parseText = (text: string, headingColor: string) => {
           return ('</em>')
         }
       })
-      console.log(newArray)
+
       // Replace last open em element with original value
       if (asteriskOpen) {
         const lastStrong = newArray.lastIndexOf('<em>')
