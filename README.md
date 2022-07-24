@@ -1,6 +1,6 @@
 # Markdown-parser
 
-Markdown-parser is a web app that converts markdown to html. The resulting page can be converted to PDF and downloaded. It's built on React/Next.js, and PDF conversion is handled by jsPDF library.
+Markdown-parser is a web app that converts markdown to html. The resulting page can be converted to PDF and downloaded. It's built on React/Next.js, and PDF conversion is handled by jsPDF library. Parsing is done manually, but ReactHtmlParser is used is some cases to convert temporary string type arrays to ReactNodes.
 
 ### Supported markdown features
 
@@ -26,3 +26,4 @@ Viewer page allows user to change background color, font color, title color, and
 - React.js
 - Next.js
 - Bulma CSS
+- Sass

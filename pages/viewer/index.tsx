@@ -1,10 +1,28 @@
 import type { NextPage } from "next";
-import Script from 'next/script'
 import { ReactNode, useContext, useEffect, useState } from "react";
 import { parseText } from "../editor";
 import { EditorContext } from "../_app";
 import { FiDownload } from 'react-icons/fi'
-import { exportToPDF } from "./pdfexport";
+
+import { jsPDF } from "jspdf";
+
+// PDF export
+const exportToPDF = (source: HTMLElement, width: number, height: number ) => {
+    if (!source)
+        return
+    
+    const doc = new jsPDF({
+        orientation: 'p',
+        unit: 'px',
+        format: 'a4',
+        hotfixes: ['px_scaling']
+       })
+    doc.html(source, {
+        callback: (doc) => {
+            doc.save()
+        },
+    })
+}
 
 const Viewer: NextPage = () => {
 
@@ -198,7 +216,7 @@ const Viewer: NextPage = () => {
       </div>
 
       {/* Output section */}
-      <div className={classNames} id='output' style={{ width: width, height: height, letterSpacing: 0.05 }}>
+      <div className={classNames} id='output' style={{ width: width, height: height, letterSpacing: 0.75 }}>
         {output?.map((line: ReactNode, index: number) => (
           <div key={index.toString()}>{line}</div>
         ))}

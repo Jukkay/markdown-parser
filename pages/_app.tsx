@@ -11,7 +11,7 @@ function MyApp({ Component, pageProps }: AppProps) {
   // State declarations
   const [text, setText] = useState('')
   const [bgColor, setBgColor] = useState('')
-  const [output, setOutput] = useState<ReactNode[]>()
+  const [output, setOutput] = useState<ReactNode>()
   const [headingColor, setHeadingColor] = useState("has-text-black");
 
   return (

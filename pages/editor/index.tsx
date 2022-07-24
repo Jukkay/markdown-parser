@@ -3,13 +3,12 @@ import Link from "next/link";
 import {
   useEffect,
   useContext,
-  ReactNode,
 } from "react";
 import { EditorContext } from "../_app";
 import ReactHtmlParser from 'react-html-parser';
 
 // Parses markdown row by row
-export const parseText = (text: string, headingColor: string ) => {
+export const parseText = (text: string, headingColor: string) => {
   const array = text.split("\n");
   const parsedArray = array.map((line: string, linenumber: number) => {
     const index = linenumber.toString();
@@ -53,12 +52,14 @@ export const parseText = (text: string, headingColor: string ) => {
       );
 
     // Unordered lists
-    if (/^[-+]/.test(line))
-      return <li key={index}>{line.replace(/^[-+]/, "")}</li>;
+    if (/^[-+]/.test(line)) {
+      return (<li key={index} className='pl-4'>{line.replace(/^[-+]/, "")}</li>);
+    }
 
     // Numbered lists
-    if (/^\d{1,2}./.test(line))
-      return <li key={index}>{line.replace(/^\d{1,2}./, "")}</li>;
+    if (/^\d{1,2}./.test(line)) {
+      return <li key={index} className='pl-4'>{line.replace(/^\d{1,2}./, "")}</li>;
+    }
 
     // Images
     if (/^(?:!\[)(.*)(?:\]\()(.*)(?:\))/.test(line)) {
@@ -87,7 +88,7 @@ export const parseText = (text: string, headingColor: string ) => {
       const arr = line.match(/^(?:\[)(.*)(?:\]\()(.*)(?:\))/);
       if (arr)
         return (
-          <a key={index} href={arr[2]}>
+          <a key={index} href={arr[2]} className='pl-4'>
             {arr[1]}
           </a>
         );
@@ -124,7 +125,7 @@ export const parseText = (text: string, headingColor: string ) => {
           return ('</strong>')
         }
       })
-      
+
       // Replace last open em element with original value
       if (asteriskOpen) {
         const lastStrong = newArray.lastIndexOf('<strong>')
@@ -137,7 +138,7 @@ export const parseText = (text: string, headingColor: string ) => {
           newArray[lastStrong] = '__'
       }
       const html = newArray.join('')
-      return <div key={index}>{ ReactHtmlParser(html)}</div>;
+      return <div key={index}>{ReactHtmlParser(html)}</div>;
     }
 
     // Italic text
@@ -184,7 +185,7 @@ export const parseText = (text: string, headingColor: string ) => {
           newArray[lastStrong] = '_'
       }
       const html = newArray.join('')
-      return <div key={index}>{ ReactHtmlParser(html)}</div>;
+      return <div key={index}>{ReactHtmlParser(html)}</div>;
     }
     // Return for unrecognized patterns
     return (
@@ -219,7 +220,7 @@ const Editor: NextPage = () => {
   return (
     <div>
       <h1 className="title is-4 is-pulled-left">Edit</h1>
-      
+
       {/* Text area input */}
       <textarea
         className="textarea mt-5"
@@ -230,7 +231,7 @@ const Editor: NextPage = () => {
         onChange={handleChange}
       >
       </textarea>
-      
+
       {/* Button link to viewer page */}
       <Link href="/viewer">
         <button className="button is-large is-primary my-3 is-pulled-right">
