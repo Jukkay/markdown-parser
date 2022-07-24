@@ -1,9 +1,10 @@
 import type { NextPage } from "next";
+import Script from 'next/script'
 import { ReactNode, useContext, useEffect, useState } from "react";
 import { parseText } from "../editor";
 import { EditorContext } from "../_app";
 import { FiDownload } from 'react-icons/fi'
-import { exportToPDF } from "./pdf_export";
+import { exportToPDF } from "./pdfexport";
 
 const Viewer: NextPage = () => {
 
@@ -69,6 +70,7 @@ const Viewer: NextPage = () => {
 
   return output ? (
     <div className="has-text-left">
+      {/* <Script src="html2pdf.bundle.min.js" strategy="afterInteractive" /> */}
       <h1 className="title is-4 my-6">Viewer</h1>
       <div className="is-flex is-flex-wrap-wrap is-align-items-end">
 
@@ -196,7 +198,7 @@ const Viewer: NextPage = () => {
       </div>
 
       {/* Output section */}
-      <div className={classNames} id='output' style={{ width: width, height: height }}>
+      <div className={classNames} id='output' style={{ width: width, height: height, letterSpacing: 0.05 }}>
         {output?.map((line: ReactNode, index: number) => (
           <div key={index.toString()}>{line}</div>
         ))}

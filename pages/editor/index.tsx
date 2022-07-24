@@ -3,8 +3,10 @@ import Link from "next/link";
 import {
   useEffect,
   useContext,
+  ReactNode,
 } from "react";
 import { EditorContext } from "../_app";
+import ReactHtmlParser from 'react-html-parser';
 
 // Parses markdown row by row
 export const parseText = (text: string, headingColor: string ) => {
@@ -92,17 +94,97 @@ export const parseText = (text: string, headingColor: string ) => {
     }
 
     // Bold text
-    if (/(\*\*|__)(.*)(\*\*|__)/.test(line)) {
-      return <strong key={index}>{line.replace(/(\*\*|__)/g, "")}</strong>;
+    if (/(\*\*|__)/.test(line)) {
+      const arr = line.split(/(\*\*|__)/).filter(element => element !== '')
+      let asteriskOpen = false
+      let lodashOpen = false
+      const newArray = arr.map((chunk, index) => {
+        if (chunk !== '**' && chunk !== '__')
+          return (`<span>${chunk}</span>`)
+        if (lodashOpen && chunk !== '__') {
+          return (`<span>${chunk}</span>`)
+        }
+        if (asteriskOpen && chunk !== '**') {
+          return (`<span>${chunk}</span>`)
+        }
+        if (chunk == '**' && !asteriskOpen && !lodashOpen) {
+          asteriskOpen = true
+          return ('<strong>')
+        }
+        if (chunk == '**' && asteriskOpen) {
+          asteriskOpen = false
+          return ('</strong>')
+        }
+        if (chunk == '__' && !lodashOpen && !asteriskOpen) {
+          lodashOpen = true
+          return ('<strong>')
+        }
+        if (chunk == '__' && lodashOpen) {
+          lodashOpen = false
+          return ('</strong>')
+        }
+      })
+      
+      // Replace last open em element with original value
+      if (asteriskOpen) {
+        const lastStrong = newArray.lastIndexOf('<strong>')
+        if (lastStrong > -1)
+          newArray[lastStrong] = '**'
+      }
+      if (lodashOpen) {
+        const lastStrong = newArray.lastIndexOf('<strong>')
+        if (lastStrong > -1)
+          newArray[lastStrong] = '__'
+      }
+      const html = newArray.join('')
+      return <div key={index}>{ ReactHtmlParser(html)}</div>;
     }
 
     // Italic text
-    if (/(\*|_)(.*)(\*|_)/.test(line)) {
-      return (
-        <span key={index} className="is-italic">
-          {line.replace(/(\*|_)/g, "")}
-        </span>
-      );
+    if (/(\*|_)/.test(line)) {
+      const arr = line.split(/(\*|_)/).filter(element => element !== '')
+      let asteriskOpen = false
+      let lodashOpen = false
+      const newArray = arr.map((chunk, index) => {
+        if (chunk !== '*' && chunk !== '_')
+          return (`<span>${chunk}</span>`)
+        if (lodashOpen && chunk !== '_') {
+          return (`<span>${chunk}</span>`)
+        }
+        if (asteriskOpen && chunk !== '*') {
+          return (`<span>${chunk}</span>`)
+        }
+        if (chunk == '*' && !asteriskOpen && !lodashOpen) {
+          asteriskOpen = true
+          return ('<em>')
+        }
+        if (chunk == '*' && asteriskOpen) {
+          asteriskOpen = false
+          return ('</em>')
+        }
+        if (chunk == '_' && !lodashOpen && !asteriskOpen) {
+          lodashOpen = true
+          return ('<em>')
+        }
+        if (chunk == '_' && lodashOpen) {
+          lodashOpen = false
+          return ('</em>')
+        }
+      })
+      console.log(newArray)
+      // Replace last open em element with original value
+      if (asteriskOpen) {
+        const lastStrong = newArray.lastIndexOf('<em>')
+        if (lastStrong > -1)
+          newArray[lastStrong] = '*'
+      }
+      if (lodashOpen) {
+        const lastStrong = newArray.lastIndexOf('<em>')
+        if (lastStrong > -1)
+          newArray[lastStrong] = '_'
+      }
+      const html = newArray.join('')
+      return <div key={index}>{ ReactHtmlParser(html)}</div>;
     }
     // Return for unrecognized patterns
     return (
