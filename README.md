@@ -36,7 +36,9 @@ http://markdown-parser.vercel.app/
 ### Usage
 
 1. Click the 'editor' button
-2. Write markup
+2. Write markdown
 3. Click the 'Go to viewer' or 'Viewer' button to open the viewer. Text is saved and parsed automatically.
 4. If you want you can change the colors and the font size to fine tune the look.
 5. Click 'Download as PDF' button to download the file.
+
+Text in editor persists in localStorage automatically.
