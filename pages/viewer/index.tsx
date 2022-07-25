@@ -1,6 +1,5 @@
 import type { NextPage } from "next";
 import { ReactNode, useContext, useEffect, useState } from "react";
-import { parseText } from "../editor";
 import { EditorContext } from "../_app";
 import { FiDownload } from 'react-icons/fi'
 import { jsPDF } from "jspdf";
@@ -26,7 +25,7 @@ const exportToPDF = (source: HTMLElement, width: number, height: number ) => {
 const Viewer: NextPage = () => {
 
   // Context import
-  const { bgColor, setBgColor, output, setOutput, text, setText, headingColor, setHeadingColor } =
+  const { bgColor, setBgColor, output, setOutput, setText, headingColor, setHeadingColor } =
     useContext(EditorContext);
 
   // Local state declarations
@@ -36,27 +35,6 @@ const Viewer: NextPage = () => {
   const [textSize, setTextSize] = useState(14);
   const [classNames, setClassNames] = useState("");
 
-  // Look for saved text in local storage
-  useEffect(() => {
-    const savedText = localStorage.getItem("savedText");
-    if (savedText) {
-      setText(savedText);
-      const savedOutput = parseText(savedText, headingColor)
-      setOutput(savedOutput);
-    }
-  }, []);
-
-  // Parses and saves input text on change
-  useEffect(() => {
-    if (text) {
-      setOutput(parseText(text, setHeadingColor));
-      localStorage.setItem(
-        "savedText",
-        text
-      );
-    }
-  }, [text]);
-
   // Calculates width and height in A4 ratio for output div
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -65,7 +43,7 @@ const Viewer: NextPage = () => {
       setHeight(height);
       setWidth(width);
     }
-  });
+  }, []);
 
   // Sets new classnames string when settings change
   useEffect(() => {

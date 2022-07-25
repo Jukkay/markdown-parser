@@ -1,14 +1,13 @@
 import type { NextPage } from "next";
 import Link from "next/link";
 import {
-  useEffect,
-  useContext,
+  useContext
 } from "react";
 import { EditorContext } from "../_app";
 import ReactHtmlParser from 'react-html-parser';
 
 // Parses markdown row by row
-export const parseText = (text: string, headingColor: string) => {
+export const parseText = (text: string) => {
   const array = text.split("\n");
   const parsedArray = array.map((line: string, linenumber: number) => {
     const index = linenumber.toString();
@@ -99,7 +98,7 @@ export const parseText = (text: string, headingColor: string) => {
       const arr = line.split(/(\*\*|__)/).filter(element => element !== '')
       let asteriskOpen = false
       let lodashOpen = false
-      const newArray = arr.map((chunk, index) => {
+      const newArray = arr.map((chunk) => {
         if (chunk !== '**' && chunk !== '__')
           return (`<span>${chunk}</span>`)
         if (lodashOpen && chunk !== '__') {
@@ -146,7 +145,7 @@ export const parseText = (text: string, headingColor: string) => {
       const arr = line.split(/(\*|_)/).filter(element => element !== '')
       let asteriskOpen = false
       let lodashOpen = false
-      const newArray = arr.map((chunk, index) => {
+      const newArray = arr.map((chunk) => {
         if (chunk !== '*' && chunk !== '_')
           return (`<span>${chunk}</span>`)
         if (lodashOpen && chunk !== '_') {
@@ -200,22 +199,23 @@ export const parseText = (text: string, headingColor: string) => {
 
 const Editor: NextPage = () => {
   // Context import
-  const { setBgColor, text, setText, output, setOutput, headingColor, setHeadingColor } =
+  const { text, setText, setOutput } =
     useContext(EditorContext);
 
   // Text area input control
   const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) =>
     setText(e.target.value);
 
-  // Look for saved text in local storage
-  useEffect(() => {
-    const savedText = localStorage.getItem("savedText");
-    if (savedText) {
-      setText(savedText);
-      const savedOutput = parseText(savedText, headingColor)
-      setOutput(savedOutput);
+  // Parses and saves input text
+  const handleViewerClick = (text: string) => {
+    if (text) {
+      setOutput(parseText(text));
+      localStorage.setItem(
+        "savedText",
+        text
+      );
     }
-  }, []);
+  }
 
   return (
     <div>
@@ -234,7 +234,7 @@ const Editor: NextPage = () => {
 
       {/* Button link to viewer page */}
       <Link href="/viewer">
-        <button className="button is-large is-primary my-3 is-pulled-right">
+        <button className="button is-large is-primary my-3 is-pulled-right" onClick={() => handleViewerClick(text)}>
           Go to viewer
         </button>
       </Link>
