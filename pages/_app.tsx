@@ -24,7 +24,7 @@ function MyApp({ Component, pageProps }: AppProps) {
       setOutput(savedOutput);
     }
   }, []);
-  
+
   // Parses and saves input text
   const handleViewerClick = (text: string) => {
     if (text) {
@@ -38,8 +38,8 @@ function MyApp({ Component, pageProps }: AppProps) {
   return (
     <div className="container is-fluid">
       <section className='section'>
-        <div className='columns'>
-          <div className='column is-11 is-offset-1'>
+        <div className='columns is-centered'>
+          <div className='column is-10'>
 
             {/* Context provider */}
             <EditorContext.Provider value={{ text, setText, bgColor, setBgColor, output, setOutput, headingColor, setHeadingColor }}>

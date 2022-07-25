@@ -1,32 +1,38 @@
 import type { NextPage } from "next";
 import { ReactNode, useContext, useEffect, useState } from "react";
 import { EditorContext } from "../_app";
-import { FiDownload } from 'react-icons/fi'
+import { FiDownload } from "react-icons/fi";
 import { jsPDF } from "jspdf";
 
 // PDF export
-const exportToPDF = (source: HTMLElement, width: number, height: number ) => {
-    if (!source)
-        return
-    const doc = new jsPDF({
-      orientation: 'p',
-      unit: 'px',
-      format: 'a4',
-      hotfixes: ['px_scaling']
-      })
-    doc.html(source, {
-        callback: (doc) => {
-            doc.save()
-        },
-        autoPaging: 'text',
-    })
-}
+const exportToPDF = (source: HTMLElement, width: number, height: number) => {
+  if (!source) return;
+  const doc = new jsPDF({
+    orientation: "p",
+    unit: "px",
+    format: [width, height],
+    putOnlyUsedFonts: true,
+  });
+  doc.html(source, {
+    callback: (doc) => {
+      doc.save();
+    },
+    windowWidth: width + 0.1, // Only way to avoid generating extra blank page
+    width: width,
+  });
+};
 
 const Viewer: NextPage = () => {
-
   // Context import
-  const { bgColor, setBgColor, output, setOutput, setText, headingColor, setHeadingColor } =
-    useContext(EditorContext);
+  const {
+    bgColor,
+    setBgColor,
+    output,
+    setOutput,
+    setText,
+    headingColor,
+    setHeadingColor,
+  } = useContext(EditorContext);
 
   // Local state declarations
   const [width, setWidth] = useState(0);
@@ -38,8 +44,8 @@ const Viewer: NextPage = () => {
   // Calculates width and height in A4 ratio for output div
   useEffect(() => {
     if (typeof window !== "undefined") {
-      const width = window.innerWidth * 0.7
-      const height = width * 1.4142
+      const width = Math.floor(window.innerWidth * 0.5);
+      const height = Math.floor(width * 1.4142);
       setHeight(height);
       setWidth(width);
     }
@@ -47,27 +53,25 @@ const Viewer: NextPage = () => {
 
   // Sets new classnames string when settings change
   useEffect(() => {
-    const string = `is-flex-grow-0 p-6 outputdiv ${bgColor} ${textColor}`;
+    const string = `p-6 outputdiv ${bgColor} ${textColor}`;
     setClassNames(string);
   }, [bgColor, textColor]);
 
   // Updates heading color css variable
   useEffect(() => {
-    document.documentElement.style.setProperty('--heading-color', headingColor)
+    document.documentElement.style.setProperty("--heading-color", headingColor);
   }, [headingColor]);
 
   // Click handler for export button
   const handleExportClick = () => {
-    const output = document.getElementById('output')
-    if (output)
-      exportToPDF(output, width, height)
-  }
+    const output = document.getElementById("output");
+    if (output) exportToPDF(output, width, height);
+  };
 
   return output ? (
     <div className="has-text-left">
       <h1 className="title is-4 my-6">Viewer</h1>
       <div className="is-flex is-flex-wrap-wrap is-align-items-end">
-
         {/* Background color selector */}
         <div className="mb-3 mr-6">
           <p className="mb-3 has-text-weight-semibold">Background color:</p>
@@ -188,7 +192,10 @@ const Viewer: NextPage = () => {
 
         {/* Download button */}
         <div className="">
-          <button className="button is-medium is-primary my-3 is-pulled-right" onClick={() => handleExportClick()}>
+          <button
+            className="button is-medium is-primary my-3 is-pulled-right"
+            onClick={() => handleExportClick()}
+          >
             <span className="icon is-small mr-1">
               <FiDownload />
             </span>
@@ -198,10 +205,16 @@ const Viewer: NextPage = () => {
       </div>
 
       {/* Output section */}
-      <div className={classNames} id='output' style={{ width: width, height: height, fontSize: textSize}}>
-        {output?.map((line: ReactNode, index: number) => (
-          <div key={index.toString()}>{line}</div>
-        ))}
+      <div className="is-flex is-justify-content-center mt-6">
+        <div
+          className={classNames}
+          id="output"
+          style={{ width: width, height: height, fontSize: textSize }}
+        >
+          {output?.map((line: ReactNode, index: number) => (
+            <div key={index.toString()}>{line}</div>
+          ))}
+        </div>
       </div>
     </div>
   ) : (
