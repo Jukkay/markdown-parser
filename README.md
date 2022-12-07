@@ -1,6 +1,6 @@
 # Markdown-parser
 
-Markdown-parser is a web app that converts markdown to html. The resulting page can be converted to PDF and downloaded. It's built on React/Next.js, and PDF conversion is handled by jsPDF library. Parsing is done manually, but ReactHtmlParser is used is some cases to convert temporary string type arrays to ReactNodes.
+Markdown-parser is a web app that converts markdown to HTML. The resulting page can be converted to PDF and downloaded. It's built on React/Next.js, and PDF conversion is handled by the jsPDF library. Parsing is done manually, but ReactHtmlParser is used in some cases to convert temporary string arrays to ReactNodes.
 
 ### Supported markdown features
 
@@ -14,13 +14,12 @@ Markdown-parser is a web app that converts markdown to html. The resulting page 
 
 ### Limitations
 
-Only one markdown styling type allowed per line.
+Only one markdown styling type is allowed per line.
 
 ### Extra functionality 
 
-Line color can be specified with `$color[your color] lorem ipsum`. For example writing 'red' inside square brackets makes the line red.
-
-Viewer page allows user to change background color, font color, title color, and font size for the whole document.
+Line color can be specified with `$color[your color] lorem ipsum`. For example, writing 'red' inside square brackets makes the line red.
+The Viewer page allows the user to change the background color, font color, title color, and font size for the whole document.
 
 ### Technologies
 - React.js
@@ -37,8 +36,8 @@ http://markdown-parser.vercel.app/
 
 1. Click the 'editor' button
 2. Write markdown
-3. Click the 'Go to viewer' or 'Viewer' button to open the viewer. Text is saved and parsed automatically.
-4. If you want you can change the colors and the font size to fine tune the look.
-5. Click 'Download as PDF' button to download the file.
+3. Click the 'Go to viewer' or the 'Viewer' button to open the viewer. Text is saved and parsed automatically.
+4. If you want you can change the colors and the font size to fine-tune the look.
+5. Click the 'Download as PDF' button to download the file.
 
-Text in editor persists in localStorage automatically.
+The text in the editor persists in the localStorage automatically.
